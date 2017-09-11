@@ -1,4 +1,4 @@
-(ns pfds.protocols)
+(ns pfds.protocols.heap)
 
 (defprotocol HEAP
   (heap-empty?     [heap])
