@@ -21,7 +21,7 @@
   (heap-find-min [heap] (if (heap-empty? heap)
                           (throw (IllegalStateException. "Can't heap-find-min of an empty heap"))
                           (.x heap)))
-  
+
   (heap-delete-min [heap] (if (heap-empty? heap)
                             (throw (IllegalStateException. "Can't heap-delete-min of an empty heap"))
                             (heap-merge (.hl heap) (.hr heap))))

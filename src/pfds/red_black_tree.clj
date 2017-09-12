@@ -1,6 +1,14 @@
 (ns pfds.red-black-tree
   (:require [clojure.core.match :refer [match]]))
 
+(deftype RedBlackTree [rbt]
+  clojure.lang.IPersistentSet
+  (cons [xs x] (RedBlackTree. (rbt-insert (.rbt xs) x)))
+  (get [xs x] (rbt-find (.rbt xs) x))
+  (seq [xs] (rbt-seq (.rbt xs))))
+
+(def EMPTY (RedBlackTree. nil))
+
 (defn- balance-l [rbt]
   (match rbt
          [:black [:red [:red l2 v2 r2] v1 r1] v0 r0] [:red [:black l2 v2 r2] v1 [:black r1 v0 r0]]
