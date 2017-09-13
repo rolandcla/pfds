@@ -1,7 +1,8 @@
 (ns pfds.performance.check-heaps
   (:require [pfds.pairing-heap :as p-heap])
   (:require [pfds.binomial-heap :as b-heap])
-  (:require [pfds.leftist-heap :as l-heap]))
+  (:require [pfds.leftist-heap :as l-heap])
+  (:require [pfds.mutables.binary-heap :as bin-heap]))
 
 (defn check-pairing-heap [n]
   (println "check-pairing-heap" n)
@@ -37,5 +38,17 @@
         heap (time (reduce #(-> %1 (conj %2) pop)
                            heap
                            seq2))
+        ]))
+
+(defn check-mut-binary-heap [n]
+  (println "check-mut-binary-heap" n)
+  (let [seq1 (repeatedly n #(rand-int n))
+        seq2 (repeatedly n #(rand-int n))
+        _ (println "Populating heap")
+        heap (time (apply bin-heap/make-binary-heap Integer/TYPE (inc n) seq1))
+        _ (println "Add and remove elements")
+        heap (time (doseq [x seq2]
+                     (bin-heap/bh-insert heap x)
+                     (bin-heap/bh-del-min heap)))
         ]))
 
