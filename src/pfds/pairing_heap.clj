@@ -34,11 +34,14 @@
 
 (def EMPTY (PairingHeap. nil []))
 
-(defn- merge-pairs [heaps]
-  (if-let [[h & hs] (seq heaps)]
-    (if (seq hs)
-      (heap-merge (heap-merge h (first hs)) (merge-pairs (next hs)))
-      h)
-    EMPTY))
+(defn make-pairing-heap
+  ([] EMPTY)
+  ([& xs] (into EMPTY xs)))
+
+(defn- merge-pairs [[h & hs :as heaps]]
+  (if (seq hs)
+    (merge-pairs (map (fn [[a b]] (if b (heap-merge a b) a)) (partition-all 2 heaps)))
+    (or h EMPTY)))
+
 
 
