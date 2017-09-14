@@ -8,12 +8,21 @@
   (println "check-pairing-heap" n)
   (let [seq1 (repeatedly n #(rand-int n))
         seq2 (repeatedly n #(rand-int n))
-        _ (println "Populating heap")
+        _ (println "Populating heap with random ints")
         heap (time (into p-heap/EMPTY seq1))
         _ (println "Add and remove elements")
         heap (time (reduce #(-> %1 (conj %2) pop)
                            heap
                            seq2))
+
+        seq1 (range n)
+        seq2 (range n 0 -1)
+        _ (println "\nPopulating heap with sorted ints")
+        heap (time (into p-heap/EMPTY seq1))
+        _ (println "Add and remove elements")
+        heap (time (reduce #(-> %1 (conj %2) pop)
+                           heap
+                           seq1))
         ]))
 
 (defn check-binomial-heap [n]

@@ -38,6 +38,11 @@
   ([] EMPTY)
   ([& xs] (into EMPTY xs)))
 
+(defmethod print-method PairingHeap [h w]
+  (print-method `(~'PairingHeap. ~(.elem h) ~(.subheaps h)) w))
+
+;;-----------------------------------------------------------------------------------------------
+
 (defn- merge-pairs [[h & hs :as heaps]]
   (if (seq hs)
     (merge-pairs (map (fn [[a b]] (if b (heap-merge a b) a)) (partition-all 2 heaps)))

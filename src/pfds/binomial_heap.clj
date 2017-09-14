@@ -1,5 +1,4 @@
 (ns pfds.binomial-heap
-  (:require  [clojure.test :as t])
   (:require  [clojure.string :as str]))
 
 (declare insert-tree ts-merge remove-min-tree)
@@ -8,15 +7,20 @@
 
 (deftype Heap [ts]
   clojure.lang.IPersistentStack
-  (cons [h x] (Heap. (insert-tree (Node. 0 x '()) (.ts h))))
-  (peek [h] (let [[t _] (remove-min-tree (.ts h))] (.x t)))
-  (pop  [h] (Heap. (let [[t ts] (remove-min-tree (.ts h))]
-                     (ts-merge (reverse (.cs t)) ts))))
-  (seq  [h] (when (seq (.ts h))
+  (cons [_ x] (Heap. (insert-tree (Node. 0 x '()) ts)))
+  (peek [_] (let [[t _] (remove-min-tree ts)] (.x t)))
+  (pop  [_] (Heap. (let [[t ts2] (remove-min-tree ts)]
+                     (ts-merge (reverse (.cs t)) ts2))))
+  (seq  [h] (when (seq ts)
               (cons (peek h) (seq (pop h)))))
   )
 
 (def EMPTY (Heap. '()))
+
+(defn make-binomial-heap
+  ([] EMPTY)
+  ([& xs] (into EMPTY xs)))
+
 (defn bh-merge [h1 h2]
   (Heap. (ts-merge (.ts h1) (.ts h2))))
 
@@ -47,10 +51,11 @@
 (defn- insert-tree [t ts]
   ;;(println "insert-tree" t ts)
   (if (seq ts)
-    (if (< (.r t) (.r (first ts)))
-      (conj ts t)
-      (insert-tree (link t (first ts))
-                   (rest ts)))
+    (let [u (first ts)]
+      (if (< (.r t) (.r u))
+        (conj ts t)
+        (insert-tree (link t u)
+                     (rest ts))))
     (list t)))
 
 (defn- ts-merge [tts1 tts2]
